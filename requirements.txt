@@ -2,3 +2,6 @@ Flask
 plotly
 numpy
 scipy
+
+
+#pyyaml #for DNS

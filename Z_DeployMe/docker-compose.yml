@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  threebody-app: #working with traefik
+    image: threebodies-threebody-app #built before
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_RUN_HOST=0.0.0.0
+      - FLASK_ENV=production
+    #command: tail -f /dev/null #keep running for debug
+    volumes:
+      - /home/jalcocert/Docker/ThreeBodies:/app #Tweak this as per your path
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.routed_service.entrypoints=http"
+      - "traefik.http.routers.routed_service.rule=Host(`routed_service.jalcocertech.com`)"
+      - "traefik.http.middlewares.routed_service-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.routed_service.middlewares=routed_service-https-redirect"
+      - "traefik.http.routers.routed_service-secure.entrypoints=https"
+      - "traefik.http.routers.routed_service-secure.rule=Host(`routed_service.jalcocertech.com`)"
+      - "traefik.http.routers.routed_service-secure.tls=true"
+      - "traefik.http.routers.routed_service-secure.tls.certresolver=cloudflare"
+      - "traefik.http.routers.routed_service-secure.service=routed_service"
+      - "traefik.http.services.routed_service.loadbalancer.server.port=5000"
+
+networks:
+  proxy:
+    external: true

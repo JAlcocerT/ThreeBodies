@@ -1,0 +1,12 @@
+cloudflare:
+  api_token: "your_cf_dns_token"
+  zone_id: "your_zone_id"
+  records:
+    - name: "your_record_name" #it will create a your_record_name.yourdomain.com record
+      type: "A"
+      content: "your_record_content_like_192.168.1.11" #with a certian A record like 192.168.1.11
+      proxied: false #And we just need DNS, no proxy feature
+    # Add more records as needed
+
+#See if it works:
+#nslookup your_record_name.yourdomain.com
