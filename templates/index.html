@@ -33,8 +33,16 @@
             Gravitational Constant G (m³ kg⁻¹ s⁻²):
             <input name="G" type="number" step="any" value="{{default_G}}" required style="width: 18em">
         </p>
+        <p>
+            Simulation Duration (seconds):
+            <input name="tmax" type="number" step="any" value="{{default_tmax}}" required style="width: 8em">
+            &nbsp;&nbsp;
+            Number of Steps (animation smoothness):
+            <input name="steps" type="number" step="1" min="10" max="1000" value="{{default_steps}}" required style="width: 6em">
+        </p>
         <button type="submit">Play</button>
     </form>
+    <p style="font-size: 0.95em; color: #444;">After running, use the time slider below the plot to play or select a specific moment in the simulation.</p>
     <hr>
     {% if plot_div %}
         {{plot_div|safe}}
