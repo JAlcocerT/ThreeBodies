@@ -1,9 +1,14 @@
-version: '3.8'
+#nslookup flask.jalcocertech.com
+#sudo docker compose up -d
+#sudo docker compose down
+
+
+#version: '3.8'
 services:
   threebody-app: #working with traefik
     image: threebodies-threebody-app #built before
-    ports:
-      - "5000:5000"
+    # ports:
+    #   - "5000:5000"
     environment:
       - FLASK_APP=app.py
       - FLASK_RUN_HOST=0.0.0.0
@@ -14,16 +19,18 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=proxy"
-      - "traefik.http.routers.routed_service.entrypoints=http"
-      - "traefik.http.routers.routed_service.rule=Host(`routed_service.jalcocertech.com`)"
-      - "traefik.http.middlewares.routed_service-https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.routers.routed_service.middlewares=routed_service-https-redirect"
-      - "traefik.http.routers.routed_service-secure.entrypoints=https"
-      - "traefik.http.routers.routed_service-secure.rule=Host(`routed_service.jalcocertech.com`)"
-      - "traefik.http.routers.routed_service-secure.tls=true"
-      - "traefik.http.routers.routed_service-secure.tls.certresolver=cloudflare"
-      - "traefik.http.routers.routed_service-secure.service=routed_service"
-      - "traefik.http.services.routed_service.loadbalancer.server.port=5000"
+      - "traefik.http.routers.threebody-app.entrypoints=http"
+      - "traefik.http.routers.threebody-app.rule=Host(`flask.jalcocertech.com`)" #Tweak this with your subdomain
+      - "traefik.http.middlewares.threebody-app-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.threebody-app.middlewares=threebody-app-https-redirect"
+      - "traefik.http.routers.threebody-app-secure.entrypoints=https"
+      - "traefik.http.routers.threebody-app-secure.rule=Host(`flask.jalcocertech.com`)" #Tweak this with your subdomain
+      - "traefik.http.routers.threebody-app-secure.tls=true"
+      - "traefik.http.routers.threebody-app-secure.tls.certresolver=cloudflare"
+      - "traefik.http.routers.threebody-app-secure.service=threebody-app"
+      - "traefik.http.services.threebody-app.loadbalancer.server.port=5000"
+    networks: #Important to connect to Traefik Network
+      - proxy      
 
 networks:
   proxy:
