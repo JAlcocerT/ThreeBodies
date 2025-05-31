@@ -14,11 +14,11 @@ app.secret_key = 'replace_with_a_secure_random_key'  # Needed for session
 @app.route('/', methods=['GET', 'POST'])
 def index():
     default_G = 6.67430e-11
-    default_masses = [7000000, 8000000, 6000000]  # kg, human scale
+    default_masses = [700000000, 800000000, 600000000]  # kg
     default_positions = [[0, 0, 0], [2, 0, 0], [1, 1.5, 0]]  # meters
     default_velocities = [[0, 0, 0], [0, 0.2, 0], [0.2, 0, 0]]  # m/s
     default_tmax = 60  # seconds
-    default_steps = 200
+    default_steps = 200 #smoothness
 
     # Try to get last-used values from session
     session_defaults = session.get('params', {})

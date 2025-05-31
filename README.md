@@ -1,7 +1,16 @@
 # ThreeBodies
+
 The three body problem with python Flask. Vibe Coded.
 
+```sh
+# In your project directory:
+docker compose build
+docker compose up
+```
 
+> Go to `localhost:5000`
+
+![Flask - Three Bodies](Z_DeployMe/3bodes-flask.png)
 
 ---
 
