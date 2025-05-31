@@ -1,3 +1,4 @@
 *_venv/
+*venv/
 
 cloudflare_config.yaml

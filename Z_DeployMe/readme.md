@@ -12,10 +12,18 @@ git clone https://github.com/JAlcocerT/ThreeBodies
 cd ThreeBodies
 ```
 
+For https setup with Traefik:
+
 ```sh
 docker compose build #threebodies-threebody-app
 cd Z_DeployMe
 docker-compose up -d
+```
+
+To add TinyAuth (working together with Traefik https)
+
+```sh
+sudo docker compose -f TinyAuth_docker-compose.yml up -d
 ```
 
 
