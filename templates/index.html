@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Three-Body Problem Simulator</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .input-table td { padding: 4px 8px; }
+        .input-table th { text-align: left; }
+        .container { max-width: 800px; margin: auto; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Three-Body Problem Simulator</h1>
+    <form method="post">
+        <table class="input-table">
+            <tr><th></th><th>Mass (kg)</th><th>Position X (m)</th><th>Position Y (m)</th><th>Position Z (m)</th><th>Velocity X (m/s)</th><th>Velocity Y (m/s)</th><th>Velocity Z (m/s)</th></tr>
+            {% for i in range(3) %}
+            <tr>
+                <td>Body {{i+1}}</td>
+                <td><input name="m{{i+1}}" type="number" step="any" value="{{default_masses[i]}}" required></td>
+                <td><input name="x{{i+1}}" type="number" step="any" value="{{default_positions[i][0]}}" required></td>
+                <td><input name="y{{i+1}}" type="number" step="any" value="{{default_positions[i][1]}}" required></td>
+                <td><input name="z{{i+1}}" type="number" step="any" value="{{default_positions[i][2]}}" required></td>
+                <td><input name="vx{{i+1}}" type="number" step="any" value="{{default_velocities[i][0]}}" required></td>
+                <td><input name="vy{{i+1}}" type="number" step="any" value="{{default_velocities[i][1]}}" required></td>
+                <td><input name="vz{{i+1}}" type="number" step="any" value="{{default_velocities[i][2]}}" required></td>
+            </tr>
+            {% endfor %}
+        </table>
+        <p>
+            Gravitational Constant G (m³ kg⁻¹ s⁻²):
+            <input name="G" type="number" step="any" value="{{default_G}}" required style="width: 18em">
+        </p>
+        <button type="submit">Play</button>
+    </form>
+    <hr>
+    {% if plot_div %}
+        {{plot_div|safe}}
+    {% endif %}
+</div>
+</body>
+</html>
