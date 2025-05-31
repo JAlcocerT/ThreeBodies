@@ -1,8 +1,12 @@
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, send_file, jsonify
 import numpy as np
 import plotly.graph_objs as go
 import plotly.io as pio
 from threebody import simulate_three_body
+import tempfile
+import os
+import shutil
+import subprocess
 
 app = Flask(__name__)
 app.secret_key = 'replace_with_a_secure_random_key'  # Needed for session
@@ -116,5 +120,64 @@ def index():
         default_steps=default_steps,
         plot_div=plot_div)
 
+from flask import after_this_request
+
+@app.route('/download_mp4', methods=['POST'])
+def download_mp4():
+    try:
+        # Get parameters from form
+        m1 = float(request.form['m1'])
+        m2 = float(request.form['m2'])
+        m3 = float(request.form['m3'])
+        pos1 = [float(request.form['x1']), float(request.form['y1']), float(request.form['z1'])]
+        pos2 = [float(request.form['x2']), float(request.form['y2']), float(request.form['z2'])]
+        pos3 = [float(request.form['x3']), float(request.form['y3']), float(request.form['z3'])]
+        vel1 = [float(request.form['vx1']), float(request.form['vy1']), float(request.form['vz1'])]
+        vel2 = [float(request.form['vx2']), float(request.form['vy2']), float(request.form['vz2'])]
+        vel3 = [float(request.form['vx3']), float(request.form['vy3']), float(request.form['vz3'])]
+        G = float(request.form['G'])
+        tmax = float(request.form['tmax'])
+        steps = int(request.form['steps'])
+        t, bodies = simulate_three_body([m1, m2, m3], [pos1, pos2, pos3], [vel1, vel2, vel3], G=G, t_span=(0, tmax), t_eval=np.linspace(0, tmax, steps))
+        colors = ['blue', 'red', 'green']
+        # Create temp dir for images
+        temp_dir = tempfile.mkdtemp()
+        img_paths = []
+        for k in range(len(t)):
+            frame_data = []
+            for i in range(3):
+                frame_data.append(go.Scatter3d(
+                    x=bodies[i][:k+1,0], y=bodies[i][:k+1,1], z=bodies[i][:k+1,2],
+                    mode='lines', line=dict(color=colors[i], width=3), name=f'Body {i+1} Path ({colors[i]})', showlegend=False
+                ))
+                frame_data.append(go.Scatter3d(
+                    x=[bodies[i][k,0]], y=[bodies[i][k,1]], z=[bodies[i][k,2]],
+                    mode='markers', marker=dict(size=8, color=colors[i]), name=f'Body {i+1} ({colors[i]})', showlegend=False
+                ))
+            layout = go.Layout(
+                scene=dict(xaxis_title='X (m)', yaxis_title='Y (m)', zaxis_title='Z (m)'),
+                margin=dict(l=0, r=0, b=0, t=40),
+                showlegend=False,
+            )
+            fig = go.Figure(data=frame_data, layout=layout)
+            img_path = os.path.join(temp_dir, f'frame_{k:04d}.png')
+            fig.write_image(img_path, width=700, height=500, scale=2)
+            img_paths.append(img_path)
+        mp4_path = os.path.join(temp_dir, 'animation.mp4')
+        # Use ffmpeg to create MP4
+        cmd = [
+            'ffmpeg', '-y', '-framerate', '20', '-i', os.path.join(temp_dir, 'frame_%04d.png'),
+            '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-r', '30', mp4_path
+        ]
+        subprocess.run(cmd, check=True)
+        @after_this_request
+        def cleanup(response):
+            shutil.rmtree(temp_dir)
+            return response
+        return send_file(mp4_path, as_attachment=True, download_name='threebody_animation.mp4', mimetype='video/mp4')
+    except Exception as e:
+        return f"<div style='color:red'>Error while generating MP4: {e}</div>", 500
+
 if __name__ == '__main__':
     app.run(debug=True)
+
