@@ -25,7 +25,10 @@ source threebodies_venv/bin/activate #(linux)
 **Install dependencies** with:
 
 ```sh
-#pip install beautifulsoup4 openpyxl pandas numpy==2.0.0
+pip install python-dotenv
+pip install Flask authlib requests #for LogTo
+pip install logto # or `poetry add logto` or whatever you use
+pip install hypercorn
 pip install -r requirements.txt #all at once
 #pip freeze | grep langchain
 
@@ -35,10 +38,7 @@ pip freeze > requirements-output.txt #generate a txt with the ones you have!
 ```
 
 ```sh
-source .env
-
-#export OPENAI_API_KEY="your-api-key-here"
-#set OPENAI_API_KEY=your-api-key-here
-#$env:OPENAI_API_KEY="your-api-key-here"
-echo $OPENAI_API_KEY
+python app.py
+#python app-v2.py
+#hypercorn app-v2:app --bind 0.0.0.0:5050
 ```

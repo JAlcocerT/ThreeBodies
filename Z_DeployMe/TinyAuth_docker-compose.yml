@@ -1,8 +1,7 @@
 #nslookup flask.jalcocertech.com
 #nslookup tinyauth.jalcocertech.com
 
-#sudo docker compose up -d
-#sudo docker compose down
+#sudo docker compose -f TinyAuth_docker-compose.yml up -d
 
 
 #version: '3.8'
@@ -24,14 +23,15 @@ services:
       - "traefik.http.routers.threebody-app.entrypoints=http"
       - "traefik.http.routers.threebody-app.rule=Host(`flask.jalcocertech.com`)" #Tweak this with your subdomain
       - "traefik.http.middlewares.threebody-app-https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.routers.threebody-app.middlewares=threebody-app-https-redirect"
+      - "traefik.http.routers.threebody-app.middlewares=threebody-app-https-redirect,threebody-app-forwardauth"
       - "traefik.http.routers.threebody-app-secure.entrypoints=https"
       - "traefik.http.routers.threebody-app-secure.rule=Host(`flask.jalcocertech.com`)" #Tweak this with your subdomain
       - "traefik.http.routers.threebody-app-secure.tls=true"
       - "traefik.http.routers.threebody-app-secure.tls.certresolver=cloudflare"
       - "traefik.http.routers.threebody-app-secure.service=threebody-app"
       - "traefik.http.services.threebody-app.loadbalancer.server.port=5000"
-      - "traefik.http.middlewares.threebody-app.forwardauth.address=tinyauth" #THIS MAKES IT WORK WITH TINYAUTH!!!
+      - "traefik.http.routers.threebody-app-secure.middlewares=threebody-app-forwardauth"
+      - "traefik.http.middlewares.threebody-app-forwardauth.forwardauth.address=http://tinyauth:3000/auth"
     networks: #Important to connect to Traefik Network
       - proxy      
 

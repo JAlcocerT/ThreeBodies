@@ -2,3 +2,9 @@
 *venv/
 
 cloudflare_config.yaml
+.env
+
+acme.json
+*.pyc
+cf-token
+*.log
