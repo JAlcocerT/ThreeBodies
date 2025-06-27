@@ -1,6 +1,17 @@
 * https://logto.io/
 * https://docs.logto.io/introduction
 
+```sh
+cd LogTo
+
+
+uv venv
+source .venv/bin/activate
+uv pip install -r requirements.txt
+
+python3 app-v2.py
+```
+
 Step 1: Register Your Flask App in Logto
 Log in to your Logto admin console.
 Go to Applications and click Create Application.

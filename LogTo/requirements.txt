@@ -1,0 +1,10 @@
+Flask
+flask[async]
+plotly
+numpy
+scipy
+logto
+python-dotenv
+hypercorn
+
+#pyyaml #for DNS
