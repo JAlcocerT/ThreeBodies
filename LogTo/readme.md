@@ -10,7 +10,9 @@ uv venv
 source .venv/bin/activate
 uv pip install -r requirements.txt
 
-python3 app-v2.py
+#python3 app-v2.py
+#python3 logto-sample.py
+python3 logto-sample-v2.py
 ```
 
 Step 1: Register Your Flask App in Logto
