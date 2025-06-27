@@ -54,9 +54,61 @@ def authenticated(shouldRedirect: bool = False, fetchUserInfo: bool = False):
 # --- Routes ---
 @app.route("/")
 async def home():
-    if client.isAuthenticated() is False:
-        return "Not authenticated <a href='/sign-in'>Sign in</a>"
-    return "Authenticated <a href='/sign-out'>Sign out</a>"
+    is_auth = client.isAuthenticated()
+    user_html = """
+        <div style='text-align:center;margin-top:2em;'>
+            <h2>Welcome to Logto Sample App!</h2>
+            <p>This is a demo Python Flask app with Logto authentication.</p>
+        </div>
+    """
+    button_html = """
+        <div style='position:absolute;top:32px;right:32px;'>
+            <a href='/sign-in' style='padding: 14px 32px; font-size: 1.15em; font-weight: 600; border-radius: 32px; background: linear-gradient(90deg,#667eea,#764ba2,#e684ae); color: white; text-decoration: none; box-shadow: 0 4px 24px rgba(118,75,162,0.18); transition: background 0.2s;'>Sign in / Sign up</a>
+        </div>
+    """
+    signout_html = """
+        <div style='position:absolute;top:32px;right:32px;'>
+            <a href='/sign-out' style='padding: 14px 32px; font-size: 1.15em; font-weight: 600; border-radius: 32px; background: linear-gradient(90deg,#e684ae,#764ba2,#667eea); color: white; text-decoration: none; box-shadow: 0 4px 24px rgba(118,75,162,0.18); transition: background 0.2s;'>Sign out</a>
+        </div>
+    """
+    bg_style = """
+        <style>
+            body {
+                min-height: 100vh;
+                margin: 0;
+                font-family: 'Segoe UI', Arial, sans-serif;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #e684ae 100%);
+                color: #222;
+            }
+            .centered {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+            }
+        </style>
+    """
+    html = f"""
+        <!DOCTYPE html>
+        <html lang='en'>
+        <head>
+            <meta charset='utf-8'>
+            <title>Logto Sample App</title>
+            {bg_style}
+        </head>
+        <body>
+            {button_html if not is_auth else signout_html}
+            <div class='centered'>
+                {user_html}
+                <div style='margin-top:2em;font-size:1.1em;'>
+                    {'You are <b>not authenticated</b>.' if not is_auth else 'You are <b>authenticated</b>!'}
+                </div>
+            </div>
+        </body>
+        </html>
+    """
+    return html
 
 @app.route("/sign-in")
 async def sign_in():
