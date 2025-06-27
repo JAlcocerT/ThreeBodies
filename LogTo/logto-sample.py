@@ -55,10 +55,16 @@ def authenticated(shouldRedirect: bool = False, fetchUserInfo: bool = False):
 @app.route("/")
 async def home():
     is_auth = client.isAuthenticated()
+    email_html = ""
+    if is_auth:
+        userinfo = await client.fetchUserInfo()
+        email = getattr(userinfo, 'primary_email', None)
+        if email:
+            email_html = f"<div style='margin-top:1em;font-size:1.2em;color:#444;'>Signed in as <b>{email}</b></div>"
     user_html = """
-        <div style='text-align:center;margin-top:2em;'>
-            <h2>Welcome to Logto Sample App!</h2>
-            <p>This is a demo Python Flask app with Logto authentication.</p>
+        <div style='text-align:center;'>
+            <h2 style='margin-bottom:0.5em;'>Welcome to Logto Sample App!</h2>
+            <p style='margin-top:0;'>This is a demo Python Flask app with Logto authentication.</p>
         </div>
     """
     button_html = """
@@ -84,8 +90,9 @@ async def home():
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                justify-content: center;
-                height: 100vh;
+                justify-content: flex-start;
+                min-height: 100vh;
+                padding-top: 10vh;
             }
         </style>
     """
@@ -101,6 +108,7 @@ async def home():
             {button_html if not is_auth else signout_html}
             <div class='centered'>
                 {user_html}
+                {email_html}
                 <div style='margin-top:2em;font-size:1.1em;'>
                     {'You are <b>not authenticated</b>.' if not is_auth else 'You are <b>authenticated</b>!'}
                 </div>
@@ -137,9 +145,36 @@ async def protectedUserinfo():
     except LogtoException as e:
         return "<h2>Error</h2>" + str(e)
 
+import os
+import asyncio
+from flask import request, abort
+import hmac
+import hashlib
+import json
+
+# --- Webhook Secret ---
+LOGTO_WEBHOOK_SECRET = os.environ.get("LOGTO_WEBHOOK_SECRET", "set-a-secret-value")
+
+@app.route("/logto-webhook", methods=["POST"])
+def logto_webhook():
+    # Logto recommends verifying the webhook signature for security
+    signature = request.headers.get("X-Logto-Signature")
+    payload = request.data
+    if not signature or not verify_logto_signature(payload, signature):
+        abort(401)
+    event = request.json
+    # Log the event to a file for demonstration
+    with open("logto_webhook_events.log", "a") as f:
+        f.write(json.dumps(event) + "\n")
+    return "OK", 200
+
+def verify_logto_signature(payload, signature):
+    # Logto signs webhooks using HMAC SHA256 and your secret
+    mac = hmac.new(LOGTO_WEBHOOK_SECRET.encode(), payload, hashlib.sha256)
+    expected = mac.hexdigest()
+    return hmac.compare_digest(expected, signature)
+
 if __name__ == "__main__":
-    import os
-    import asyncio
     # Run with Hypercorn for async support, but this fallback is for dev/testing only
     port = int(os.environ.get("PORT", 5088))
     try:
