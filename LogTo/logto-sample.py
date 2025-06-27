@@ -23,11 +23,14 @@ class SessionStorage(Storage):
     def delete(self, key: str) -> None:
         session.pop(key, None)
 
+from logto import UserInfoScope
+
 client = LogtoClient(
     LogtoConfig(
         endpoint=LOGTO_ENDPOINT,
         appId=LOGTO_APP_ID,
         appSecret=LOGTO_APP_SECRET,
+        scopes=[UserInfoScope.profile, UserInfoScope.email],
     ),
     storage=SessionStorage(),
 )
@@ -55,12 +58,20 @@ def authenticated(shouldRedirect: bool = False, fetchUserInfo: bool = False):
 @app.route("/")
 async def home():
     is_auth = client.isAuthenticated()
-    email_html = ""
+    userinfo_html = ""
     if is_auth:
         userinfo = await client.fetchUserInfo()
-        email = getattr(userinfo, 'primary_email', None)
-        if email:
-            email_html = f"<div style='margin-top:1em;font-size:1.2em;color:#444;'>Signed in as <b>{email}</b></div>"
+        name = getattr(userinfo, 'name', None)
+        email = getattr(userinfo, 'email', None) or getattr(userinfo, 'primary_email', None)
+        username = getattr(userinfo, 'username', None)
+        userinfo_html = f"""
+            <div style='margin-top:1em;font-size:1.1em;color:#444;'>
+                <div><b>Name:</b> {name or '-'}<br></div>
+                <div><b>Email:</b> {email or '-'}<br></div>
+                <div><b>Username:</b> {username or '-'}<br></div>
+                <div style='margin-top:1em;'><a href='/protected/userinfo' style='font-size:1em;'>View all user info (JSON)</a></div>
+            </div>
+        """
     user_html = """
         <div style='text-align:center;'>
             <h2 style='margin-bottom:0.5em;'>Welcome to Logto Sample App!</h2>
@@ -108,7 +119,7 @@ async def home():
             {button_html if not is_auth else signout_html}
             <div class='centered'>
                 {user_html}
-                {email_html}
+                {userinfo_html}
                 <div style='margin-top:2em;font-size:1.1em;'>
                     {'You are <b>not authenticated</b>.' if not is_auth else 'You are <b>authenticated</b>!'}
                 </div>
