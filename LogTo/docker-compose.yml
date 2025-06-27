@@ -1,0 +1,32 @@
+version: '3.8'
+
+networks:
+  cloudflared_tunnel:
+    external: true
+
+services:
+  flask:
+    build: .
+    container_name: flask
+    restart: unless-stopped
+    env_file:
+      - .env.example
+    ports:
+      - "5088:5088"
+    networks:
+      - cloudflared_tunnel
+    command: ["python3", "logto-sample.py"]
+
+  logto-webhook:
+    build: .
+    container_name: logto-webhook-receiver
+    restart: unless-stopped
+    # env_file:
+    #   - .env.example
+    environment:
+      - LOGTO_WEBHOOK_SECRET=8Cqxy4gGTS1yBegTTkVFFlPi4kxGHVWE
+    ports:
+      - "5089:5088"
+    networks:
+      - cloudflared_tunnel
+    command: ["python3", "logto-webhook-receiver.py"]

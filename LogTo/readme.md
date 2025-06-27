@@ -25,3 +25,29 @@ Save and note:
 Client ID
 Client Secret
 OIDC Endpoint (e.g., https://<your-logto-domain>/oidc)
+
+
+```sh
+cd LogTo
+python3 logto-sample.py
+
+###
+
+docker compose up --build
+
+#docker compose up --build > compose.log 2>&1
+#docker compose up --build | tee compose.log
+docker compose up --build flask | tee flask.log
+docker compose up --build logto-webhook | tee webhook.log
+```
+
+
+```sh
+payload='{"test":123}'
+secret='8Cqxy4gGTS1yBegTTkVFFlPi4kxGHVWE'
+signature=$(echo -n "$payload" | openssl dgst -sha256 -hmac "$secret" | sed 's/^.* //')
+curl -X POST https://webhooks.jalcocertech.com/logto-webhook \
+  -H 'Content-Type: application/json' \
+  -H "X-Logto-Signature: $signature" \
+  -d "$payload"
+```
