@@ -1,9 +1,10 @@
 * https://logto.io/
+    * https://cloud.logto.io/vurfo6/get-started
+    * https://cloud.logto.io/vurfo6/applications/create
 * https://docs.logto.io/introduction
 
 ```sh
 cd LogTo
-
 
 uv venv
 source .venv/bin/activate
