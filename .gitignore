@@ -1,6 +1,8 @@
 *_venv/
 *venv/
 
+__pycache__/
+
 cloudflare_config.yaml
 .env
 

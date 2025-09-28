@@ -1,10 +1,7 @@
-
-
-
 1. Clone the repo
 2. Get Docker Ready
 3. Prepare [DNS Records](#dns-records)
-4. Get Traefik Ready
+4. Get Traefik Ready - https://github.com/JAlcocerT/Home-Lab/blob/main/traefik
 5. Deploy
 
 ```sh
