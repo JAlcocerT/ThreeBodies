@@ -3,6 +3,7 @@
 The three body problem with python Flask. Vibe Coded.
 
 ```sh
+git clone https://github.com/JAlcocerT/ThreeBodies
 # In your project directory:
 docker compose build
 docker compose up
@@ -13,6 +14,8 @@ docker compose up
 ![Flask - Three Bodies](Z_DeployMe/3bodes-flask.png)
 
 ---
+
+To test the Python Flask version:
 
 ```sh
 #python -m venv solvingerror_venv #create the venv
