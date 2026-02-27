@@ -13,6 +13,10 @@ docker compose up
 
 ![Flask - Three Bodies](Z_DeployMe/3bodes-flask.png)
 
+See `./ThePoincareLab` folder for the React + Vite version created with `GEMINI.md`
+
+![alt text](ThePoincareLab/poincare-ui.png)
+
 ---
 
 To test the Python Flask version:
