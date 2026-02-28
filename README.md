@@ -17,6 +17,10 @@ See `./ThePoincareLab` folder for the React + Vite version created with `GEMINI.
 
 ![alt text](ThePoincareLab/poincare-ui.png)
 
+```sh
+./renderer_env/bin/python3 generate_animation.py --duration 10.0 --output simulation.mp4
+```
+
 ---
 
 To test the Python Flask version:

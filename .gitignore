@@ -10,3 +10,6 @@ acme.json
 *.pyc
 cf-token
 *.log
+
+renderer_env/
+simulation.mp4

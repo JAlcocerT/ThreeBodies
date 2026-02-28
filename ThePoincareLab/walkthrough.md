@@ -98,7 +98,46 @@ ThePoincareLab/
 
 ---
 
-## Initial Conditions (Chaotic Triple-Sun)
+## MP4 Video Generation
+
+A cinematic video renderer is available to generate high-quality MP4 animations from the command line.
+
+### Prerequisites
+
+The script requires a dedicated Python environment (already set up in `renderer_env`).
+
+### How to use
+
+Run the script using the virtual environment's python:
+
+```bash
+./renderer_env/bin/python3 generate_animation.py --duration 10.0 --output my_simulation.mp4
+```
+
+### Advanced Parameters
+
+| Argument | Type | Default | Description |
+|---|---|---|---|
+| `--masses` | 3 floats | 1 1 1 | Masses of the three bodies |
+| `--pos` | 6 floats | -2 0.5 ... | Initial XY positions (x1 y1 x2 y2 x3 y3) |
+| `--vel` | 6 floats | 0 0.6 ... | Initial XY velocities (vx1 vy1 vx2 vy2 vx3 vy3) |
+| `--duration` | float | 10.0 | Video length in seconds |
+| `--fps` | int | 30 | Frames per second |
+| `--res` | 2 ints | 1920 1080 | Video resolution (Width Height) |
+| `--scale` | float | 150.0 | Visual scale factor (pixels per unit) |
+
+Example with custom chaos:
+```bash
+./renderer_env/bin/python3 generate_animation.py \
+  --masses 2.0 1.0 0.5 \
+  --vel 0.5 -0.5 0.5 0.5 -0.8 0.0 \
+  --duration 15.0 \
+  --output custom_chaos.mp4
+```
+
+---
+
+## Technical Detailstions (Chaotic Triple-Sun)
 
 ```
 Positions:  [-2, 0.5], [2, -0.5], [0, 2]    (visual units)
