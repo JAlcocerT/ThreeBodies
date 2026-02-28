@@ -12,4 +12,4 @@ cf-token
 *.log
 
 renderer_env/
-simulation.mp4
+*.mp4

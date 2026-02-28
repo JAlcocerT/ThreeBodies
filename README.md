@@ -19,7 +19,10 @@ See `./ThePoincareLab` folder for the React + Vite version created with `GEMINI.
 
 ```sh
 ./renderer_env/bin/python3 generate_animation.py --duration 10.0 --output simulation.mp4
+./renderer_env/bin/python3 generate_animation.py --vel 0.2 -0.2 0.2 0.2 -0.3 0.0 --duration 300.0 --output simulation3.mp4
 ```
+
+
 
 ---
 
