@@ -1,6 +1,7 @@
 # The Poincaré Lab - Architecture & Aesthetics
 
 ## Core Directives
+
 **Aesthetics Preset:** Preset D — "Cosmic Entropy" (The Gold Standard)
 **Initial Orbital State:** Chaotic Triple-Sun
 **Primary Interactive Goal:** Modify Mass

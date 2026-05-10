@@ -7,8 +7,10 @@ COMPOSE ?= docker compose
 # Paths
 TRAEFIK_COMPOSE := Z_DeployMe/docker-compose.yml
 TINYAUTH_COMPOSE := Z_DeployMe/TinyAuth_docker-compose.yml
+POINCARE_DIR := ThePoincareLab
 
-.PHONY: help run docker docker-up docker-down docker-logs traefik traefik-down traefik-logs tiny tiny-down tiny-logs
+.PHONY: help run docker docker-up docker-down docker-logs traefik traefik-down traefik-logs tiny tiny-down tiny-logs \
+        poincare-install poincare-dev poincare-build poincare-preview
 
 ## help: Show this help message
 help:
@@ -63,3 +65,21 @@ tiny-down:
 ## tiny-logs: Tail logs for TinyAuth+Traefik stack
 tiny-logs:
 	$(COMPOSE) -f $(TINYAUTH_COMPOSE) logs -f
+
+# ── ThePoincareLab (React + Vite) ────────────────────────────────────────────
+
+## poincare-install: Install npm dependencies for ThePoincareLab
+poincare-install:
+	cd $(POINCARE_DIR) && npm install
+
+## poincare-dev: Start Vite dev server (hot-reload, http://localhost:5173)
+poincare-dev:
+	cd $(POINCARE_DIR) && npm run dev
+
+## poincare-build: Build production bundle into ThePoincareLab/dist/
+poincare-build:
+	cd $(POINCARE_DIR) && npm run build
+
+## poincare-preview: Serve the production build locally (http://localhost:4173) — mirrors CF Pages
+poincare-preview: poincare-build
+	cd $(POINCARE_DIR) && npm run preview
